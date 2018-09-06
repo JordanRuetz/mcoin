@@ -1,39 +1,43 @@
 pragma solidity ^0.4.2;
 
 /*
- * Do I really need a max tokens variable?
- * What does approveAndCall funciton do?
- * Need to check totalSupply is not misused according to new definition
- * 
- * Going to have a linear increase in price starting with 0.001 eth
+ * The ERC-20 token MCoin, a token for use in the Chainz app.
+ * Used as proof of stake in a curation market.  Some tokens
+ * initially offered free, after which there is a linear increase
+ * in price of 0.001 (this needs adjustment) eth per token sold.  When a user sells a 
+ * token they get a proportionally amount of the eth pool.  First 1000 tokens free.
+ * 1000000000000000 wei  = 0.001 eth
  */
 
 contract mcoin {
 	string public name = 'mcoin';
 	string public symbol = 'MCO';
 	string public standard = 'mcoin v1.0';
-	/* this is a state variable, which means
-	that it is stored on the blockchain, and
-	anytime we update it, we are writing to
-	the blockchain */
-	// public state variables have getters
-	// total supply function required for erc20 - this will be the amount minted
+
+	// amount minted - amount destroyed
 	uint256 public totalSupply;
 
 	// the amount of eth the contract has, this will be used for minting and paying out dividends
 	uint256 public ethPool;
-	// account that holds coins for use when bought, has reserve of 100, minting when hits 50 using ethPool ->
+
 	// implies that the ethPool should be kept in this admin account instead
-	// when coins are sold back they will go here
+	// when coins are sold back they will go here -> need to check if this is cost efficient
 	address public admin;
-	// how much it will cost for the next token purchase
+
+	// how much it will cost for the next token purchase in wei
 	uint256 public tokenPrice;
-	// these are coins not in reserve at the moment
-	uint256 public totalWithdrawn;
-	// how much my coins can be split
+
+	// can only buy whole tokens
 	uint256 public decimals = 0;
-	// price of a token
+
+	// price of a single token
 	uint256 public price = 0;
+
+	// amount minted
+	uint256 public totalMinted = 0;
+
+	// price increase everytime token is bought
+	uint256 public constant increase = 1000000000000000;
 
 
 	event Transfer(
@@ -66,33 +70,26 @@ contract mcoin {
 
 	mapping(address => mapping(address => uint256)) public allowance;
 
-	// Constructor
-	// Leading underscore convention local variable
-	constructor(address _admin, uint256 _initialSupply) public {
-		admin = _admin;
-		// msg is a global var in solidity
+	/*
+	 * Create the contract with an initial supply of tokens
+	 */
+	constructor(uint256 _initialSupply) public {
 		balanceOf[msg.sender] = _initialSupply;
-
 		totalSupply = _initialSupply;
-		// allocate the initial supply
-
 	}
 
-	function mint() {
-		require(balanceOf[admin] <= 50);
-		// make the number of tokens in admin 100
-		uint256 _curAmount = balanceOf[admin];
-		balanceOf[admin] = 100;
-		// update the totalSupply
-		uint256 _amountMinted = 100 - _curAmount;
+	/*
+	 * A function that gives a user a free token if there
+	 * is less than 1000 total minted. Will replace
+	 * mcoinSale for initial token offering.
+	 */
+	function requestFreeToken() public returns (bool success) {
+		require(totalMinted < 1000);
+		balanceOf[msg.sender] += 1;
+		totalSupply += 1;
+		totalMinted += 1;
 
-		totalSupply += _amountMinted;
-
-		emit Mint(_amountMinted);
-	}
-
-	function requestFreeToken() public (bool success) {
-		require(totalSupply < 500);
+		return true;
 	}
 
 	// Delegated transfers
@@ -104,40 +101,60 @@ contract mcoin {
 		return true;
 	}
 
-	function approveAndCall() {
+	function approveAndCall() internal pure {
 		// figure out what this is supposed to do
 	}
 
-	function increaseTokenPrice() {
-		price += 0.001;
+	/*
+	 * Increase the price of a token by the set increase.
+	 * To be done everytime a token is bought.
+	 */
+	function increaseTokenPrice() internal {
+		price += increase;
 	}
 
-	function decreaseTokenPrice() {
+	/*
+	 * Decrease the price of a token by the set decrease.
+	 * To be done everytime a token is sold back.
+	 */
+	function decreaseTokenPrice() internal {
 		require(price > 0);
-		price -= 0.001;
+		if (price - increase < 0) {
+			price = 0;
+		} else {
+			price -= increase;
+		}
 	}
 
-	function calcCost(uint _numOfTokens) public returns (uint256 cost) {
+	/*
+	 * Determine how much it cost to buy an amount of the tokens.
+	 */
+	function calcCost(uint _numOfTokens) public view returns (uint256 totalCost) {
 		uint256 cost = 0;
-		for (int i = 0; i < _numOfTokens; i++) {
-			cost += (i * 0.001) + price;
+		for (uint i = 0; i < _numOfTokens; i++) {
+			cost =  cost + ((i + 1) * increase) + price;
 		}
 		return cost;
 	}
 
-	function calcSale(uint _numOfTokens) public returns (uint256 value) {
-		uint256 value;
-		for (int i = 0; i < _numOfTokens; i++) {
-			value += price - (i * 0.001);
-		}
-		return value;
+	/*
+	 * Determine how much a user gets for selling an amount of the tokens.
+	 * Shouldn't this just be a proportion of the eth pool?
+	 * Want to use safe math.
+	 */
+	function calcSale(uint _numOfTokens) public view returns (uint256 value) {
+		return (ethPool/totalSupply) * _numOfTokens;
 	}
 
+	/*
+	 * Transfer tokens from one account to another.
+	 */
 	function transfer(address _to, uint256 _value) public returns (bool success) {
-		// if false, stop function execution
+		// need to own the amount you are transfering
 		require(balanceOf[msg.sender] >= _value);
 		// this means that you are returning the tokens to admin
-		require(_to != admin);
+		// this needs to be 0x0 or something
+		// require(_to != admin);
 
 		balanceOf[msg.sender] -= _value;
 		balanceOf[_to] += _value;
@@ -163,36 +180,37 @@ contract mcoin {
 	}
 
 	function buy(uint _numOfTokens) public payable returns (bool success) {
-		require(msg.value == calcCost(_numOfTokens));
+		require(msg.value >= calcCost(_numOfTokens));
 		require(_numOfTokens <= 25);
-		require(balanceOf[admin] >= _numOfTokens);
-		require (transferFrom(admin, msg.sender, _numOfTokens));
 
-		totalWithdrawn += _numOfTokens;
+		balanceOf[msg.sender] += _numOfTokens;
+		totalSupply += _numOfTokens;
+		totalMinted += _numOfTokens;
+		ethPool += msg.value;
 
-		if (balanceOf[admin] <= 50) {
-			mint();
+		for(uint i = 0; i < _numOfTokens; i++) {
+			increaseTokenPrice();
 		}
-
-		increaseTokenPrice();
 
 		emit Sell(msg.sender, _numOfTokens);
 
 		return true;
 	}
 
-	function sell(uint _numOfTokens) public payable returns (bool success) {
+	function sell(uint _numOfTokens) public returns (bool success) {
 		require(ethPool >=  calcSale(_numOfTokens));
-		require(balanceOf[msg.sender >= _numOfTokens]);
-		require(transferFrom(msg.sender, admin, _numOfTokens));
+		require(balanceOf[msg.sender] >= _numOfTokens);
 
-		totalWithdrawn -= _numOfTokens;
+		totalSupply -= _numOfTokens;
 
-		// need to pass in numOfTokens possibly
-		decreaseTokenPrice();
+		for (uint i = 0; i < _numOfTokens; i++) {
+			decreaseTokenPrice();
+		}
 
-		//transfer the appropriate amount of eth to msg.sender
+		msg.sender.transfer(calcSale(_numOfTokens));
 
 		emit Buy(msg.sender, _numOfTokens);
+
+		return true;
 	}
 }

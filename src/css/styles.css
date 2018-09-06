@@ -1,0 +1,312 @@
+html, body {
+	padding: 0;
+	margin: 0;
+	color: white;
+}
+
+.first-view {
+	min-height: 100vh;
+	background-image: linear-gradient(to right, #1b1e39, #361b39, #1b1e39);
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#header {
+	display: flex;
+	align-items: stretch;
+	justify-content: space-between;
+	width: 100vw;
+	max-width: 100%;
+	position: fixed;
+	background-color: gray;
+	height: 50px;
+}
+
+#header-left {
+	display: flex;
+	align-items: center;
+	color: #06243B;
+}
+
+.header-link {
+	padding: 0 2em;
+	display: flex;
+	align-items: center;
+	border: solid black 1px;
+}
+
+#header-left {
+	margin-left: 20px;
+}
+
+#header-right {
+	display: flex;
+	justify-content: flex-end;
+	align-items: stretch;
+}
+
+.header-link:hover {
+	background-color: #361b39;
+	border: solid pink 1px;
+}
+
+#header-left:hover {
+	background-color: #361b39;
+	border: solid pink 1px;
+	-webkit-animation-name: switch;
+    -webkit-animation-duration: 2s;
+	animation-name: switch;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+
+button {
+	border-radius: 10px;
+	font-weight: bold;
+}
+
+button:hover {
+	cursor: pointer;
+}
+
+#btn {
+	border-radius: 10px;
+}
+
+
+#padder {
+	height: 50px;
+}
+
+#main {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	width: 60%;
+	margin: 0 auto;
+	font-size: 1.5em;
+	text-align: justify;
+	color: white;
+}
+
+#chainz-header {
+	text-align: center;
+}
+
+#main-info {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+}
+
+#main-info > div {
+	width: 50%;
+	text-align: center;
+}
+
+
+
+#main-button {
+	margin: 0;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+
+
+
+
+#buy-view {
+	background-image: linear-gradient(to right, #1b1e39, #361b39, #1b1e39);
+	display: flex;
+	border-top: solid pink 1px;
+}
+
+.center-pane {
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: stretch;
+	width: 80vw;
+}
+
+.pane-header {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.buy-content-pane {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+#buy-form > input, #buy-form > text, #buy-form > button {
+	margin: 5px;
+}
+
+#sell-form > input, #sell-form > text, #sell-form > button {
+	margin: 5px;
+}
+
+#account-form > input, #account-form > text, #account-form > button {
+	margin: 5px 0;
+}
+
+#buy-view-center > div {
+	width: 100%;
+}
+
+#top, #bottom {
+	display: flex;
+	justify-content: space-around;
+	align-items: stretch;
+	margin-bottom: 10px;
+}
+
+#top > div,  #bottom > div, #sell-content-pane > div, #account-content-pane > div, #account-logged-pane > div {
+	width: 50%;
+}
+
+#buy-right {
+	height: 100%;
+	flex: 1;
+	display: flex;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#acc {
+	height: 100%;
+}
+
+#sell-view {
+	background-image: linear-gradient(to right, #1b1e39, #361b39, #1b1e39);
+	display: flex;
+	border-top: solid pink 1px;
+}
+
+#sell-content-pane, #account-content-pane {
+	flex: 1;
+	display: flex;
+	align-items: stretch;
+	margin-bottom: 10px;
+}
+
+.transaction, .buy, .sell, .account {
+	margin: 0 auto;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.buy, .sell, .account {
+	padding: 0 5px;
+}
+
+#sell-form {
+	position: relative;
+	top: 0;
+}
+
+
+
+
+
+#account-view {
+	background-image: linear-gradient(to right, #1b1e39, #361b39, #1b1e39);
+	display: flex;
+	border-top: solid pink 1px;
+}
+
+.form-div {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	margin-top: 10px;
+}
+
+#create-account-btn {
+	margin: 5px 0 5px 5px;
+}
+
+#create-account-btn {
+	margin: 5px 5px 5px 0;
+}
+
+#account-form {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: stretch;
+	text-align: center;
+}
+
+#logout-div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#account-logged-pane {
+	display: flex;
+	align-items: stretch;
+	margin-bottom: 10px;
+}
+
+
+
+#footer {
+	background-color: gray;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	padding: 10px 0;
+}
+
+#footer > h6 {
+	margin: 5px 0;
+}
+
+#sale-warning {
+	position: absolute;
+	right: 0px;
+
+}
+
+.warning {
+	background-color: red;
+	margin-top: 5px;
+}
+
+
+#main p {
+	font-size: 1.8vw;
+}
+
+
+
+
+@keyframes switch {
+	from {color: #06243B;}
+	to {color: white;}
+}
+
+@-webkit-keyframes switch {
+	from {color: #06243B;}
+	to {color: white;}
+}

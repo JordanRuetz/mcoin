@@ -2,6 +2,10 @@ pragma solidity ^0.4.2;
 
 import "./mcoin.sol";
 
+/*
+ * This is a contract for the initial token 'sale', where the
+ * first 1000 tokens will be given away for free.
+ */
 contract mcoinSale {
 	address admin;
 	mcoin public tokenContract;

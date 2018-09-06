@@ -7,62 +7,184 @@
 		<title>MCoin ICO</title>
 		<!--<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">-->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/styles.css" type="text/css"/>
 	</head>
 	<body>
-		<div class="container" style="width: 650px">
-			<div class="row">
-				<div class="col-lg-12">
-					<h1 class="text-center">MCoin ICO</h1>
-					<hr />
-					<br />
+		<div id="header">
+			<div id="header-left">
+				<h1>MCoin</h1>
+			</div>
+			<div id="header-right">
+				<div class="header-link" id="buy-link">
+					<h4>Buy</h4>
 				</div>
-
-				<div id="loader">
-					<p class="text-center">Loading...</p>	
+				<div class="header-link" id="sell-link">
+					<h4>Sell</h4>
 				</div>
-
-				<div id="freeToken">
-					<p>Free token available.</p>
-					<button>Request Free Token</button>
+				<div class="header-link" id="login-link">
+					<h4>Login</h4>
 				</div>
-
-				<div id="content" class="text-center" style="display: none">
-					<p>
-						Introducing MCoin (MCO)!
-						Token price is <span class="token-price"></span> Ether.
-						You currently have <span id="mcoin-balance"></span> MCO.
-					</p>
-					<br />
-					<form onSubmit="App.buyTokens(); return false;" role="form">
-						<div class="form-group">
-							<div class="input-group">
-								<input id="numberOfTokens" class="form-contrl input-lg" type="number" name="number" value="1" min="1"
-								pattern="[0-9]"></input>
-								<span class="input-group-btn">
-									<button type="submit" class="btn btn-primary btn-lg">Buy Tokens</button>
-								</span>
-							</div>
-						</div>
-					</form>
-					<br/>
-					<p>
-						<span class="tokens-sold"></span> total sold.
-					</p>
-					<hr/>
-					<p id="accountAddress"></p>
-				</div>
-				
 			</div>
 		</div>
+		<div id="page-loader" style="display: none">
+			<h1>Loading...</h1>
+		</div>
+		<div id="full-content">
+			<div class="first-view">
+				<div id="padder"></div>
+				<div id="main">
+					<div id="main-center">
+						<p>Introducing MCoin, an ERC-20 token for use in the Chainz app.  Buying a single token allows you to curate music within the app. More MCoin means more curation power!</p>
+						<h2 id="chainz-header">What is Chainz?</h2>
+						<p>Chainz is a music curation app focussed on discovering less popular songs and artists.  Users who own at least one MCoin are allowed to curate any song they like.  Even if you don't own the token, you are able to browse a fresh song playlist curated by users with the token.</p>
+					</div>
+					<div id="main-info">
+						<div>
+							<h3>Total Supply: <span id="total-supply">Unavailable</span></h3>
+						</div>
+						<div>
+							<h3>Current Cost (ETH): <span class="token-price">Unavailable</span></h3>
+						</div>
+					</div>
+					<div id="main-button">
+						<button id="btn">Create a Chainz account today!</button>
+					</div>
+				</div>
+			</div>
+			<div id="buy-view">
+				<div class="center-pane">
+					<div class="pane-header">
+						<h1>Buy MCoin</h1>
+					</div>
+					<div class="buy-content-pane">
+						<div id="top">
+							<div>
+								<div class="buy">
+									<h2>Cost of next token: <span class="token-price">0</span> ETH.</h2>
+									<br/>
+									<p>Tokens price increases along a curve, with each token costing 0.001 eth more than the previous one.</p>
+									<br/>
+								</div>
+							</div>
+							<div class="center">
+								<div id="buy-right">
+									<form id="buy-form" class="transaction" onSubmit="App.buyTokens(); return false;">
+										<input id="buy-number" type="number" value="1" min="1" max="100" pattern="[0-9]">
+										<text>Cost: <span id="total-cost">0</span> eth.</text>
+										<button type="submit">Buy Tokens</button>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div id="bottom">
+							<div>
+								<div class="buy">
+									<h3>Free Token Available!</h3>
+									<p>One free token is available to users without any tokens yet when the total supply is under 1000.</p>
+								</div>
+							</div>
+							<div class="center">
+								<div>
+									<div class="transaction">
+										<button>Get Free Token!</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="sell-view">
+				<div class="center-pane">
+					<div class="pane-header">
+						<h1>Sell MCoin</h1>
+					</div>
+					<div id="sell-content-pane">
+						<div>
+							<div class="sell">
+								<h2>Selling price: <span id="selling-price">0</span> ETH.</h2>
+								<br/>
+								<p>When tokens are sold, the eth is kept in a communal pool.  Upon selling, you receive a portion of the pool proportional to the amount of tokens you own.</p>
+								<br/>
+							</div>
+						</div>
+						<div class="center">
+							<div>
+								<form id="sell-form" class="transaction" onSubmit="App.sellTokens(); return false;">
+									<input id="sell-number" type="number" value="1" min="1" max="100" pattern="[0-9]"><div id="sale-warning" class="warning" style="display: none;">hi</div></input>
+
+									<text>Value: <span id="totalSale">0</span> eth.</text>
+									<button type="submit">Sell Tokens</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="account-view">
+				<div class="center-pane">
+					<div class="pane-header">
+						<h1>
+							Manage Account
+						</h1>
+					</div>
+					<div id="account-content-pane">
+						<div>
+							<div class="account">
+								<h2>Login / Create Account</h2>
+								<br/>
+								<p>Login in to your account in order to buy tokens.  Logging in also allows us to register your eth account and number of tokens with the Chainz app, if it has not been completed yet.</p>
+								<p>Create an account in order to buy tokens to allow music curation from our app.</p>
+							</div>
+						</div>
+						<div>
+							<div class="center" id="acc">
+								<form  id="account-form">
+									<h3>Username:</h3>
+									<input id="user-input" type="text">
+									<h3>Password:</h3>
+									<input id="pass-input" type="text">
+									<div class="form-div">
+										<button type="button" id="create-account-btn">Create Account</button>
+										<button type="button" id="login-btn">Login</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div id="account-logged-pane">
+						<div>
+							<div class="account">
+								<p>Your Account: <span id="account">Unavailable</span></p>
+								<p>MCoin: <span class="numOfMCoin">Unavailable</span></p>
+							</div>
+						</div>
+						<div id="logout-div">
+							<div>
+								<button>Log Out</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="footer">
+				<h6><strong>Your Eth Account: <span id="ethAccount">null</span>.</strong></h6>
+				<h6><strong>Number of MCoin: <span class="numOfMCoin">null</span>.</strong></h6>
+			</div>
+		</div>
+
 		<!--<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>-->
 
 		<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
 
+		<script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-firestore.js"></script>
+
 
 		<script
-  src="https://code.jquery.com/jquery-3.3.1.js"
-  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-  crossorigin="anonymous"></script>
+		  src="https://code.jquery.com/jquery-3.3.1.js"
+		  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+		  crossorigin="anonymous"></script>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
